@@ -3,15 +3,12 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-marker preset="custom" type="pattern" url="./assets/marker/marker.patt">
+      <a-box position="0 1 0" material="opacity: 0.5; color: #F70087;"></a-box>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 </template>
 
 <style scoped>
