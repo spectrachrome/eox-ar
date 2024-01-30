@@ -1,6 +1,14 @@
-# Vue 3 + Vite
+# Augmented Reality for Geospatial Applications
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A building ground to assess the potential of AR in representing complex geographical data in an intuitive and interactive manner.
+
+## Resources and Links
+
+- [AR.js Marker Generator](https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html)
+- [Stemkoski's AR Examples](https://stemkoski.github.io/AR-Examples/)
+- [A Guide To Developing An Augmented Reality Web App](https://3sidedcube.com/en-us/ar-js-a-guide-to-developing-an-augmented-reality-web-app-2/)
+
+
 
 ## Recommended IDE Setup
 
