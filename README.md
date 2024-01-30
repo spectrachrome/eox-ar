@@ -1,4 +1,4 @@
-![AR Tag](https://space-resources.s3.fr-par.scw.cloud/eox_marker_banner.svg)
+![AR Tag](https://github.com/spectrachrome/eox-ar/raw/main/public/eox_ar_banner.svg)
 
 # Augmented Reality for Geospatial Applications
 
