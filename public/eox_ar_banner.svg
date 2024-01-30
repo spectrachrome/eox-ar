@@ -6,13 +6,13 @@
             <style>
                 @media (prefers-color-scheme: dark) {
                     * {
-                        fill: #DDD;
+                        fill: #EEE;
                     }
                 }
 
                 @media (prefers-color-scheme: light) {
                     * {
-                        fill: #222;
+                        fill: #111;
                     }
                 }
             </style>
