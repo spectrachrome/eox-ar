@@ -2,9 +2,9 @@
 
 # Augmented Reality for Geospatial Applications
 
-A building ground to assess the potential of AR in representing complex geographical data in an intuitive and interactive manner.
+A building ground for the evaluation of the capabilities of AR in a geospatial environment.
 
-Currently, this is a simple Vue demonstrator application which uses AR.js to instantiate a camera view, register a simple company tag (the one at the top of this document) and then render a cube. Please note that this project is still a work-in-progress, so the cube might not render fully or at all.
+Currently, this is a simple Vue demonstrator application which uses AR.js to instantiate a camera view, register a simple company tag (the one at the top of this document) and then render a cube. Please note that this project is still a work-in-progress, so the cube might not render fully or at all. Ideally, we can re-use existing code 
 
 ## Resources and Links
 
