@@ -25,6 +25,8 @@ The `ARKit` and `ARCore` APIs for iOS and Android, respectively, are in a better
 
 In particular, the demo sphere seen in the `arkit_plugin` library page moves coherently with camera movements, so that it actually feels like it's there.
 
+However, as a conclusion it is too early to utilize WebXR properly and it has yet to be determined if a dedicated app is something users would actually install on their devices, which means at least one extra step until a user can actually use the Augmented Reality features.
+
 - [`arkit_plugin`](https://pub.dev/packages/arkit_plugin) *Device access to native AR APIs on iOS with Flutter*
 - [`arcore_flutter_plugin`](https://pub.dev/packages/arcore_flutter_plugin) *Device access to native AR APIs on Android with Flutter*
 
