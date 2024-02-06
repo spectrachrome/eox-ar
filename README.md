@@ -1,4 +1,7 @@
-![AR Tag](https://github.com/spectrachrome/eox-ar/raw/main/public/eox_ar_banner.svg)
+
+![IMG_0178](https://github.com/spectrachrome/eox-ar/assets/94269527/61a4921f-8c43-49df-857e-e39fa22ae61e)
+
+![AR Tag](https://github.com/spectrachrome/eox-ar/raw/main/old/public/eox_ar_banner.svg)
 
 # Augmented Reality for Geospatial Applications
 
