@@ -7,8 +7,8 @@
 
 A building ground for the evaluation of the capabilities of AR in a geospatial environment.
 
-Currently, this is a simple Vue demonstrator application which uses AR.js to instantiate a camera view, register a simple company tag (the one at the top of this document) and then render a cube. Please note that this project is still a work-in-progress, so the cube might not render fully or at all.
-
+Currently, this is a simple Vue demonstrator application which uses AR.js to instantiate a camera view, register a simple company tag (the one at the top of this document) and then render a globe with our official maps. Please note that this project is still a work-in-progress, so the globe sometimes might not render fully or properly.
+<!--
 ## Platform Evaluation (2024-02-05)
 
 ### Is the web ready yet?
@@ -32,12 +32,15 @@ However, as a conclusion it is too early to utilize WebXR properly and it has ye
 
 - [`arkit_plugin`](https://pub.dev/packages/arkit_plugin) *Device access to native AR APIs on iOS with Flutter*
 - [`arcore_flutter_plugin`](https://pub.dev/packages/arcore_flutter_plugin) *Device access to native AR APIs on Android with Flutter*
-
+-->
 ## Resources and Links
 
 - [AR.js Marker Generator](https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html)
 - [Stemkoski's AR Examples](https://stemkoski.github.io/AR-Examples/)
 - [A Guide To Developing An Augmented Reality Web App](https://3sidedcube.com/en-us/ar-js-a-guide-to-developing-an-augmented-reality-web-app-2/)
+
+- [OpenLayers and Three.js](https://javascript.plainenglish.io/openlayers-and-three-js-99c904eed76c)
+- [Canvas Textures - A-Frame Docs](https://aframe.io/docs/1.5.0/components/material.html#canvas-textures)
 
 ## Recommended IDE Setup
 
