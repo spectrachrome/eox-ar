@@ -2,97 +2,90 @@
 <html>
   <head>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.162.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.162.0/examples/jsm/"
+        }
+      }
+    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
 
     <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ar.js/2.1.1/aframe-ar.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer">
+    </script>
+    <script
+      src="https://aframe.io/aframe/dist/aframe-master.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer">
+    </script>
+    <!--<script src="https://openlayers.org/en/v4.6.5/build/ol-debug.js"></script>-->
     <script src="js/aframe.min.js"></script>
-    <script src="js/aframe-ar.js"></script>
+    <!--<script src="js/aframe-ar.js"></script>-->
     <script type="module" src="js/eox-map.js"></script>
-    <script src="https://unpkg.com/aframe-openlayers-component/dist/aframe-openlayers-component.min.js"></script>
+    <!-- A-Frame openlayers component-->
+	<script src="build.js"></script>
+    <!--<script src="https://unpkg.com/aframe-openlayers-component/dist/aframe-openlayers-component.min.js"></script>-->
     <title>EOX Augmented Reality Demo</title>
+    <style>
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
   </head>
   <body style="margin: 0px; overflow: hidden;">
     <script>
-      AFRAME.registerComponent('updater', {
-        init: function() {
-          // declare variable for later access
-          this.num = 0;
-          // you can also access the underlying 3D object of a scene object,
-          //   for example:
-          // let target = document.querySelector('#earth').object3D;
-          // target.scale.set( 0.75, 0.75, 0.75 );
-        },
-
-        // time      = total time since init (milliseconds)
-        // timeDelta = time since last tick
-        tick: function(time, timeDelta) {
-          this.num += 1;
-          // console.log( this.num );
-        }
+      var baseLayer = new ol.layer.Tile({
+        extent: [-13884991, 2870341, -7455066, 6338219],
+        source: new ol.source.TileWMS({
+          url: 'https://services.sentinel-hub.com/ogc/wms/0635c213-17a1-48ee-aef7-9d1731695a54',
+          params: {time:'2023-12-18/2023-12-18', layers: 'AWS_VIS_WIND_U_10M'},
+          projection: 'EPSG:3857',
+          crossOrigin: 'anonymous',
+        }),
       });
 
-      // access underlying 3D object this component is attached to
-      AFRAME.registerComponent('spinner', {
-        init: function() {
-            this.el.object3D.scale.set(0.75, 0.75, 0.75);
-        },
-
-        tick: function(time, timeDelta) {
-            this.el.object3D.rotation.y += 0.01;
-        },
+      var source2 = new ol.source.Vector({
+          url: 'https://openlayers.org/en/v4.6.5/examples/data/geojson/countries.geojson',
+          format: new ol.format.GeoJSON()
+      });
+      var layer2 = new ol.layer.Vector({
+          source: source2
       });
 
-      var source1 = new ol.source.OSM();
-        var layer1 = new ol.layer.Tile({
-          source: source1
-        });
-        var source2 = new ol.source.Vector({
-            url: 'https://openlayers.org/en/v4.6.5/examples/data/geojson/countries.geojson',
-            format: new ol.format.GeoJSON()
-        });
-        var layer2 = new ol.layer.Vector({
-            source: source2
-        });
-        var map = new ol.Map({
-            layers: [
-                layer1,
-                layer2
-            ],
-            target: 'map',
-            controls: ol.control.defaults.defaults({
-                attributionOptions: {
-                    collapsible: false
-                }
-            }),
-            view: new ol.View({
-                center: [0, 0],
-                zoom: 0.7
-            })
-        });
-      /*
-      AFRAME.registerComponent('draw-canvas', {
-        schema: {default: ''},
-
-        init: function () {
-          this.canvas = document.getElementById(this.data);
-          this.ctx = this.canvas.getContext('2d');
-
-          // Draw on canvas...
-        }
-      });
-      */
+      var map = new ol.Map({
+		    layers: [
+          layer2,
+		      baseLayer,
+		    ],
+		    target: 'map',
+		    controls: ol.control.defaults.defaults({
+		        attributionOptions: {
+		            collapsible: false
+		        }
+		    }),
+		    view: new ol.View({
+		        center: [0, 0],
+		        zoom: 0.7
+		    })
+		});
     </script>
+    <!--
     <a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
       <a-assets>
-        <img id="earth-sphere" src="./images/navball.png" />
-        <!--<canvas id="map-canvas" crossorigin="anonymous"></canvas>-->
+        <eox-map id="map" style="width: 100vh; height: 100vw; z-index: 9001; position: fixed;"></eox-map>
         <div id="map"></div>
       </a-assets>
       <a-marker type="pattern" url="./patterns/hiro.patt">
         <a-sphere 
           id="earth"
           position="0 0.5 0"
-          material="transparent: true; opacity: 1.0;"
+          
           ol="map: map;
             aframeEvent: click;
             OlEvent: click;
@@ -101,8 +94,32 @@
         </a-sphere>
       </a-marker>
       <a-entity camera></a-entity>
-      <!-- empty entity, running previously declared script -->
+
       <a-entity updater></a-entity>
-    </a-scene>
+    </a-scene>-->
+    <a-scene>
+      <a-assets>
+      		<div id="map"></div>
+      </a-assets>
+
+      <a-marker type="pattern" url="./patterns/hiro.patt">
+        <a-sphere 
+          position="0 0.5 0" 
+          height="2"
+          width="4"
+          color="#c4c4c4" 
+          ol="  map: map;
+              aframeEvent: click;
+              OlEvent: click;
+                pixToVRRatio:150;" 
+        ></a-sphere>
+      </a-marker>
+
+      <a-camera id="camera" position="0 1.6 0"  look-controls wasd-controls-enabled="true" >
+        <a-text id="infoText" color="grey" value="" position="0 -0.2 -1" scale="0.4 0.4 0.4"></a-text>
+        <a-cursor fuse interval="1000"></a-cursor>
+      </a-camera>
+
+      </a-scene>
   </body>
 </html>
