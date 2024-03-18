@@ -2,20 +2,18 @@
 <html>
   <head>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <!--<script
-      src="https://cdnjs.cloudflare.com/ajax/libs/ar.js/2.1.1/aframe-ar.js"
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r76/three.min.js"></script>-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.js"
+      integrity="sha512-E71Id1i5xBlc2EftiH5s+mmpPbNJ2+XiCZy+iVb91pHKkCZmxS9WcGHpg/tyAp0mFo/9CuNFg1ey5T03kgP1bA=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
     </script>
     <script
-      src="https://aframe.io/aframe/dist/aframe-master.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/ar.js/2.2.2/aframe-ar.js"
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
-    </script>-->
-    <!--<script src="https://openlayers.org/en/v4.6.5/build/ol-debug.js"></script>-->
-    <script src="//unpkg.com/aframe"></script>
-    <!--<script src="js/aframe-ar.js"></script>-->
-    <!--<script type="module" src="js/eox-map.js"></script>-->
+    </script>
     <script src="js/aframe-globe-component.js"></script>
     <!--<script src="https://unpkg.com/aframe-openlayers-component/dist/aframe-openlayers-component.min.js"></script>-->
     <title>EOX Augmented Reality Demo</title>
@@ -50,11 +48,15 @@
 
       <a-entity updater></a-entity>
     </a-scene>-->
-    <a-scene embedded arjs vr-mode-ui="enabled: false;" stats background="color: #001" arjs="debugUIEnabled: false;">
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      stats
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
       <a-entity camera></a-entity>
 
       <a-marker type="pattern" url="./patterns/hiro.patt">
-        <a-entity id="globe" scale="0.1 0.1 0.1" globe="
+        <a-entity id="globe" scale="0.01 0.01 0.01" globe="
         globe-image-url: //unpkg.com/three-globe/example/img/earth-dark.jpg;
         bump-image-url: //unpkg.com/three-globe/example/img/earth-topology.png;
       "></a-entity>
