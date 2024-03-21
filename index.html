@@ -14,6 +14,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/geotiff"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/1.4.0/proj4.js" integrity="sha512-9FBAecJh0Z6E49D3yaooSbeH7Br8Pe+jVCsZVfo4alGWOuv5RqKwE5YsCv88Ma0iG8aUGWvfb92zDVJ9ywJPHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/aframe-globe-component.js"></script>
     <!--<script src="https://unpkg.com/aframe-openlayers-component/dist/aframe-openlayers-component.min.js"></script>-->
     <title>EOX Augmented Reality Demo</title>
@@ -25,29 +27,6 @@
     </style>
   </head>
   <body style="margin: 0px; overflow: hidden;">
-
-    <!--
-    <a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
-      <a-assets>
-        <eox-map id="map" style="width: 100vh; height: 100vw; z-index: 9001; position: fixed;"></eox-map>
-        <div id="map"></div>
-      </a-assets>
-      <a-marker type="pattern" url="./patterns/hiro.patt">
-        <a-sphere 
-          id="earth"
-          position="0 0.5 0"
-          
-          ol="map: map;
-            aframeEvent: click;
-            OlEvent: click;
-              pixToVRRatio:200;"
-          spinner >
-        </a-sphere>
-      </a-marker>
-      <a-entity camera></a-entity>
-
-      <a-entity updater></a-entity>
-    </a-scene>-->
     <a-scene
       vr-mode-ui="enabled: false;"
       stats
@@ -56,29 +35,14 @@
       <a-entity camera></a-entity>
 
       <a-marker type="pattern" url="./patterns/hiro.patt">
-        <a-entity id="globe" scale="0.0075 0.0075 0.01" globe="
+        <a-entity id="globe" scale="0.006 0.006 0.006" globe="
         globe-image-url: //unpkg.com/three-globe/example/img/earth-dark.jpg;
         bump-image-url: //unpkg.com/three-globe/example/img/earth-topology.png;
       "></a-entity>
       </a-marker>
     </a-scene>
 
-    <script>
-      // Gen random data
-      const N = 300;
-      const gData = [...Array(N).keys()].map(() => ({
-        lat: (Math.random() - 0.5) * 180,
-        lng: (Math.random() - 0.5) * 360,
-        size: Math.random() / 3,
-        color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
-      }));
 
-      const globeEntity = document.getElementById('globe');
-      globeEntity.setAttribute('globe', {
-        pointsData: gData,
-        pointAltitude: 'size',
-        pointColor: 'color'
-      });
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>
