@@ -1,41 +1,79 @@
-(async () => {
-    console.log('hello');
+const options = {
+    geotiff: {
+        // Côte d'Azur
+        bbox: [5.046, 42.9342, 7.2733, 44.1586],
+        resolution: [100, 100],
+        url: 'https://eox-ideas.s3.eu-central-1.amazonaws.com/ideas_data/AR2_wildlife_simplify_COG_b1_t_final.tif',
+        projection: 'EPSG:4326',
+        width: 20,
+        height: 20,
+    },
+};
 
-    /*
-      // Gen random data
-      const N = 300;
-      const gData = [...Array(N).keys()].map(() => ({
-        lat: (Math.random() - 0.5) * 180,
-        lng: (Math.random() - 0.5) * 360,
-        size: Math.random() / 3,
-        color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
-      }));
-
-      const globeEntity = document.getElementById('globe');
-      globeEntity.setAttribute('globe', {
-        pointsData: gData,
-        pointAltitude: 'size',
-        pointColor: 'color'
-      });
-*/
-    
-    let options = {
-        geotiff: {
-            projection: 'EPSG:4326',
-        },
-    };
-    
-    let url = 'https://eox-gtif-public.s3.eu-central-1.amazonaws.com/ideas_data/Copernicus_DSM_30_N47_00_E014_00_DEM_COG.tif';
+async function loadGeoTiff(url) {
     const tiff = await GeoTIFF.fromUrl(url);
     const image = await tiff.getImage();
+    return image;
+}
 
-    const bbox = [
-        [-5.8966108,  51.2051493],
-        [-5.8966108,  41.1759722],
-        [9.7043313,  51.2051493],
-        [9.7043313,  41.1759722],
-    ];
+function toGeoCoords(x_pixel, y_pixel, GT) {
+    const longitude = GT[0] + x_pixel * GT[1] + y_pixel * GT[2];
+    const latitude = GT[3] + x_pixel * GT[4] + y_pixel * GT[5];
+    return [longitude, latitude];
+}
+
+function convertRasterToGlobePoints(rasterValues, bounds, dimensions) {
+    const [west, south, east, north] = bounds;
+    const [width, height] = dimensions;
+
+    console.log(width);
+    console.log(height);
+  
+    // Calculate the step size for each pixel.
+    const latStep = (north - south) / height;
+    const lngStep = (east - west) / width;
+
+    console.log(latStep);
+    console.log(lngStep);
+  
+    const annotatedRaster = [];
+  
+    for (let rowIndex = 0; rowIndex < rasterValues.length; rowIndex++) {
+      for (let colIndex = 0; colIndex < rasterValues[rowIndex].length; colIndex++) {
+        const value = rasterValues[rowIndex][colIndex];
+        
+        // Calculate the latitude and longitude for the current pixel.
+        const lat = north - (rowIndex * latStep);
+        const lng = west + (colIndex * lngStep);
+  
+        annotatedRaster.push({
+            value,
+            lat,
+            lng,
+            size: Math.random() / 3,
+            color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
+        });
+      }
+    }
+  
+    return annotatedRaster;
+  }
+
+(async () => {
+    console.log('hello');
+    
+    const image = await loadGeoTiff(options.geotiff.url);
+
+    /*
+    console.log(await readGeoTiffData(
+        image,
+        options.geotiff.bbox,
+        options.geotiff.resolution[0],
+        options.geotiff.resolution[1],
+    ));
+        */
     // Convert geographic coordinates to distances using EPSG:3857
+    const bbox = options.geotiff.bbox;
     const xmin = proj4(options.geotiff.projection, 'EPSG:3857', [bbox[0], bbox[1]]);
     const xmax = proj4(options.geotiff.projection, 'EPSG:3857', [bbox[2], bbox[3]]);
 
@@ -44,20 +82,20 @@
 
     // compute the width of a single hex (gameSize), divided by 2 but multiply by ~1.155 to
     // account for the below mentioned hexagon wider than taller
-    gameSize = 50;
+    gameSize = 20;
 
     // Adjust board dimensions based on actual distances
-    width = 50;
-    height = 50;
+    width = gameSize;
+    height = gameSize;
     // Read the GeoTIFF data into a 1-dimensional array
     const [oX, oY] = image.getOrigin();
     const [imageResX, imageResY] = image.getResolution(image);
 
     let wnd = [
-    Math.round((bbox[0] - oX) / imageResX),
-    Math.round((bbox[1] - oY) / imageResY),
-    Math.round((bbox[2] - oX) / imageResX),
-    Math.round((bbox[3] - oY) / imageResY),
+        Math.round((bbox[0] - oX) / imageResX),
+        Math.round((bbox[1] - oY) / imageResY),
+        Math.round((bbox[2] - oX) / imageResX),
+        Math.round((bbox[3] - oY) / imageResY),
     ];
     console.log(wnd);
     wnd = [
@@ -69,60 +107,31 @@
 
     console.log(wnd);
 
-    console.log((await image.readRasters({
+    let raster = await image.readRasters({
         window: wnd,
         width: width,
         height: height,
-        })));
-
-    let data = (await image.readRasters({
-    window: wnd,
-    width: width,
-    height: height,
-    }))[0];
-
-    // Flip the GeoTIFF upside down
-    data = data.reverse();
-
-    const flippedData = new Array(data.length);
-    // Flip rows in our 1-dimensional array as if it were 2D
-    for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-        const newData = data[y * width + (width - 1 - x)];
-        flippedData[y * width + x] = newData;
-    }
-    }
-
-    data = flippedData;
-    const centerInLonLat = [bbox[0], bbox[1]];
-    var center = proj4(options.geotiff.projection, 'EPSG:3857', centerInLonLat);
-    // not actually center but left bottom corner of start of board but subtract ~1.5 hex
-    center = [center[0] - 1.0 * gameSize, center[1] + 0.5 * gameSize];
-
-    // Assuming the data is a single band and the size matches the game board
-    for (let y = 0; y < height; y++) {
-    const row = [];
-    for (let x = 0; x < width; x++) {
-        const value = data[y * width + x];
-        let isMine;
-        if (location.isMineCondition) {
-        isMine = !Number.isNaN(value) && location.isMineCondition(value);
-        } else {
-        isMine = Math.round(Math.random());
-        }
-        row.push({
-        isMine,
-        adjacentMines: 0,
-        isRevealed: false,
-        isFlagged: false,
-        element: null,
         });
-    }
 
-    board.push(row);
-    }
+    const pointsData = convertRasterToGlobePoints(raster, options.geotiff.bbox, [options.geotiff.width, options.geotiff.height]);
 
-    fieldCount = width * height;
+    /*
+      // Gen random data
+      const N = 300;
+      const gData = [...Array(N).keys()].map(() => ({
+        lat: (Math.random() - 0.5) * 180,
+        lng: (Math.random() - 0.5) * 360,
+        size: Math.random() / 3,
+        color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
+      }));
+    */
+      const globeEntity = document.getElementById('globe');
+      globeEntity.setAttribute('globe', {
+        pointsData,
+        pointAltitude: 'size',
+        pointColor: 'color'
+      });
+
 })().catch(err => {
     console.error(err);
 });
