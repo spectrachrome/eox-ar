@@ -6,7 +6,7 @@ const options = {
         url: 'https://eox-ideas.s3.eu-central-1.amazonaws.com/ideas_data/AR2_wildlife_simplify_COG_b1_t_final.tif',
         projection: 'EPSG:4326',
         width: 20,
-        height: 20,
+        height: 10,
     },
 };
 
@@ -37,25 +37,58 @@ function convertRasterToGlobePoints(rasterValues, bounds, dimensions) {
     console.log(lngStep);
   
     const annotatedRaster = [];
-  
+
+    // Get the data array
+    let data = rasterValues[0];
+    let flippedData = new Array(data.length);
+
+    for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < width; x++) {
+            const value = data[y * width + (width - 1 - x)];
+            flippedData[y * width + x] = value;
+
+            // Calculate the latitude and longitude for the current pixel.
+            const lat = south + (y * latStep);
+            const lng = west + (x * lngStep);
+
+            // console.log(`north: ${north}, rowIndex: ${rowIndex}, colIndex: ${Math.floor(colIndex / width)}, lat: ${lat}, lng: ${lng}`)
+            
+            if (!isNaN(value)) {
+                annotatedRaster.push({
+                    value,
+                    lat,
+                    lng,
+                    size: Math.random() / 3,
+                    color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
+                });
+            }
+        }
+    }
+
+    console.log(flippedData)
+  /*
     for (let rowIndex = 0; rowIndex < rasterValues.length; rowIndex++) {
       for (let colIndex = 0; colIndex < rasterValues[rowIndex].length; colIndex++) {
         const value = rasterValues[rowIndex][colIndex];
         
         // Calculate the latitude and longitude for the current pixel.
-        const lat = north - (rowIndex * latStep);
+        const lat = north - (Math.floor(colIndex / width) * latStep);
         const lng = west + (colIndex * lngStep);
-  
-        annotatedRaster.push({
-            value,
-            lat,
-            lng,
-            size: Math.random() / 3,
-            color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
-        });
+
+        console.log(`north: ${north}, rowIndex: ${rowIndex}, colIndex: ${Math.floor(colIndex / width)}, lat: ${lat}, lng: ${lng}`)
+        
+        if (!isNaN(value)) {
+            annotatedRaster.push({
+                value,
+                lat,
+                lng,
+                size: Math.random() / 3,
+                color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
+            });
+        }
       }
     }
-  
+*/
     return annotatedRaster;
   }
 
@@ -112,8 +145,12 @@ function convertRasterToGlobePoints(rasterValues, bounds, dimensions) {
         width: width,
         height: height,
         });
+    
+    console.log(raster);
 
     const pointsData = convertRasterToGlobePoints(raster, options.geotiff.bbox, [options.geotiff.width, options.geotiff.height]);
+    const testArray = [pointsData[0], pointsData[pointsData.length - 1]];
+    //console.log(pointsData);
 
     /*
       // Gen random data
@@ -125,11 +162,17 @@ function convertRasterToGlobePoints(rasterValues, bounds, dimensions) {
         color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
       }));
     */
+
+      const N = 6000;
+    const gData = [...Array(N).keys()].map(() => ({
+      lat: (Math.random() - 0.5) * 180 * 0.9,
+      lng: (Math.random() - 0.5) * 360 / 1,
+    }));
       const globeEntity = document.getElementById('globe');
       globeEntity.setAttribute('globe', {
         pointsData,
-        pointAltitude: 'size',
-        pointColor: 'color'
+        //pointAltitude: 3,
+        //pointColor: 'color',
       });
 
 })().catch(err => {
